@@ -7,7 +7,7 @@ const mysqlDb = {
     async init () {
         connection = await mysql.createConnection(config.dataBase);
     },
-    getConnections () {
+    async getConnections () {
         return connection;
     }
 };

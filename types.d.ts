@@ -1,13 +1,15 @@
-export interface IPostFromDb {
-    message: string;
-    author: string;
-    image: string | null;
-    date: string;
-    id: string;
+export interface Category {
+    id: number;
+    name: string;
+    description: string;
 }
 
-export interface IPost {
-    message: string;
-    author: string;
-    image: string | null;
+export interface Item {
+    id: number;
+    name: string;
+    category_id: number;
+    location_id: number;
+    description: string;
+    image: string;
+    date_added: string;
 }
