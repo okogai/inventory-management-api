@@ -13,3 +13,9 @@ export interface Item {
     image: string;
     date_added: string;
 }
+
+export interface Location {
+    id: number;
+    name: string;
+    description: string;
+}
