@@ -5,14 +5,14 @@ import {Item, Location} from "../types";
 
 const locationsRoute = express.Router();
 
-locationsRoute.get("/", async (req, res) => {
+locationsRoute.get("/", async (_req, res) => {
     const connection = await mysqlDb.getConnections();
-    const [result] = await connection.query("SELECT * FROM locations");
+    const [result] = await connection.query("SELECT id, name FROM locations");
     const locations = result as Location[];
     res.send(locations);
 });
 
-locationsRoute.get("/:id", async (req: express.Request, res: express.Response) => {
+locationsRoute.get("/:id", async (req, res) => {
     const id = req.params.id;
     const connection = await mysqlDb.getConnections();
     const [result] = await connection.query("SELECT * FROM locations WHERE id = ?", [id]);
@@ -25,10 +25,10 @@ locationsRoute.get("/:id", async (req: express.Request, res: express.Response) =
     }
 });
 
-locationsRoute.post("/", async (req: express.Request, res: express.Response) => {
+locationsRoute.post("/", async (req, res) => {
     const { name, description } = req.body;
-    if (!name || !description) {
-        res.status(400).send("Please send name and description");
+    if (!name) {
+        res.status(400).send("Please send location title");
         return;
     }
     const connection = await mysqlDb.getConnections();
@@ -44,12 +44,12 @@ locationsRoute.post("/", async (req: express.Request, res: express.Response) => 
     }
 });
 
-locationsRoute.put("/:id", async (req: express.Request, res: express.Response) => {
+locationsRoute.put("/:id", async (req, res) => {
     const id = req.params.id;
     const { name, description } = req.body;
 
-    if (!name || !description) {
-        res.status(400).send("Please send name and description.");
+    if (!name) {
+        res.status(400).send("Please send location title.");
         return;
     }
 
@@ -67,7 +67,7 @@ locationsRoute.put("/:id", async (req: express.Request, res: express.Response) =
     }
 });
 
-locationsRoute.delete("/:id", async (req: express.Request, res: express.Response) => {
+locationsRoute.delete("/:id", async (req, res) => {
     const id = req.params.id;
     const connection = await mysqlDb.getConnections();
     const [itemsResult] = await connection.query("SELECT * FROM items WHERE location_id = ?", [id]);

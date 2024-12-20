@@ -5,14 +5,14 @@ import {ResultSetHeader} from "mysql2";
 
 const categoriesRoute = express.Router();
 
-categoriesRoute.get("/", async (req: express.Request, res: express.Response) => {
+categoriesRoute.get("/", async (_req, res) => {
     const connection = await mysqlDb.getConnections();
-    const [result] = await connection.query("SELECT * FROM categories");
+    const [result] = await connection.query("SELECT id, name FROM categories");
     const categories = result as Category[];
     res.send(categories);
 });
 
-categoriesRoute.get("/:id", async (req: express.Request, res: express.Response) => {
+categoriesRoute.get("/:id", async (req, res) => {
     const id = req.params.id;
     const connection = await mysqlDb.getConnections();
     const [result] = await connection.query("SELECT * FROM categories WHERE id = ?", [id]);
@@ -25,10 +25,10 @@ categoriesRoute.get("/:id", async (req: express.Request, res: express.Response) 
     }
 });
 
-categoriesRoute.post("/", async (req: express.Request, res: express.Response) => {
+categoriesRoute.post("/", async (req, res) => {
     const { name, description } = req.body;
-    if (!name || !description) {
-        res.status(400).send("Please send name and description");
+    if (!name) {
+        res.status(400).send("Please send category title.");
         return;
     }
     const connection = await mysqlDb.getConnections();
@@ -44,12 +44,12 @@ categoriesRoute.post("/", async (req: express.Request, res: express.Response) =>
     }
 });
 
-categoriesRoute.put("/:id", async (req: express.Request, res: express.Response) => {
+categoriesRoute.put("/:id", async (req, res) => {
     const id = req.params.id;
     const { name, description } = req.body;
 
-    if (!name || !description) {
-        res.status(400).send("Please send name and description.");
+    if (!name) {
+        res.status(400).send("Please send category title.");
         return;
     }
 
@@ -67,7 +67,7 @@ categoriesRoute.put("/:id", async (req: express.Request, res: express.Response) 
     }
 });
 
-categoriesRoute.delete("/:id", async (req: express.Request, res: express.Response) => {
+categoriesRoute.delete("/:id", async (req, res) => {
     const id = req.params.id;
     const connection = await mysqlDb.getConnections();
     const [itemsResult] = await connection.query("SELECT * FROM items WHERE category_id = ?", [id]);
