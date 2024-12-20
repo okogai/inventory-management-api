@@ -111,4 +111,18 @@ itemsRoute.put("/:id", imagesUpload.single('image'), async (req, res) => {
     }
 });
 
+itemsRoute.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    const connection = await mysqlDb.getConnections();
+
+    const [deleteResult] = await connection.query("DELETE FROM items WHERE id = ?", [id]);
+    const resultHeader = deleteResult as ResultSetHeader;
+
+    if (resultHeader.affectedRows === 0) {
+        res.status(404).send("Item not found.");
+    } else {
+        res.send("Item deleted successfully.");
+    }
+});
+
 export default itemsRoute;
